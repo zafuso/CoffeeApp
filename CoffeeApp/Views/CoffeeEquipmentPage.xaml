@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:viewModels="clr-namespace:CoffeeApp.ViewModels" xmlns:model="clr-namespace:CoffeeApp.Models"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="CoffeeApp.Views.CoffeeEquipmentPage"  
              x:DataType="viewModels:CoffeeEquipmentViewModel"
              x:Name="CoffeePage"
@@ -9,6 +10,12 @@
     <ContentPage.BindingContext>
         <viewModels:CoffeeEquipmentViewModel/>
     </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <xct:ItemSelectedEventArgsConverter x:Key="ItemSelectedEventArgsConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ListView BackgroundColor="Transparent"
               SelectedItem="{Binding SelectedCoffee, Mode=TwoWay}"
@@ -22,6 +29,11 @@
               IsRefreshing="{Binding IsBusy, Mode=OneWay}"
               RefreshCommand="{Binding RefreshCommand}"
               RefreshControlColor="Red">
+        <ListView.Behaviors>
+            <xct:EventToCommandBehavior EventName="ItemSelected"
+                                        Command="{Binding SelectedCommand}"
+                                        EventArgsConverter="{StaticResource ItemSelectedEventArgsConverter}"/>
+        </ListView.Behaviors>
         
         <ListView.ItemTemplate>
             <DataTemplate x:DataType="model:Coffee">
@@ -62,8 +74,9 @@
         </ListView.Header>
 
         <ListView.Footer>
-            <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Center">
-                <Button Text="Load More"/>
+            <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
+                <Button Text="Load More" Command="{Binding LoadMoreCommand}" />
+                <Button Command="{Binding ClearCommand}" Text="Clear" />
             </StackLayout>
         </ListView.Footer>
 
