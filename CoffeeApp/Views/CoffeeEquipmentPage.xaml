@@ -1,19 +1,72 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="CoffeeApp.Views.CoffeeEquipmentPage"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:viewModels="clr-namespace:CoffeeApp.ViewModels" xmlns:model="clr-namespace:CoffeeApp.Models"
+             x:Class="CoffeeApp.Views.CoffeeEquipmentPage"  
+             x:DataType="viewModels:CoffeeEquipmentViewModel"
+             x:Name="CoffeePage"
              BackgroundColor="White">
+    <ContentPage.BindingContext>
+        <viewModels:CoffeeEquipmentViewModel/>
+    </ContentPage.BindingContext>
 
-        <Grid RowDefinitions="*,Auto,Auto,*">
-            <Label 
-                x:Name="LabelCount"
-                Grid.Row="1"
-                Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" 
-                FontSize="Large"/>
+    <ListView BackgroundColor="Transparent"
+              SelectedItem="{Binding SelectedCoffee, Mode=TwoWay}"
+              CachingStrategy="RecycleElement"
+              ItemsSource="{Binding CoffeeGroups}"
+              IsGroupingEnabled="True"
+              GroupDisplayBinding="{Binding Key}"
+              HasUnevenRows="True"
+              SeparatorVisibility="Default"
+              IsPullToRefreshEnabled="True"
+              IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+              RefreshCommand="{Binding RefreshCommand}"
+              RefreshControlColor="Red">
+        
+        <ListView.ItemTemplate>
+            <DataTemplate x:DataType="model:Coffee">
+                <ViewCell>
+                    <ViewCell.ContextActions>
+                        <MenuItem Text="Favorite" 
+                                  Command="{Binding Source={x:Reference CoffeePage}, Path=BindingContext.FavoriteCommand}"
+                                  CommandParameter="{Binding .}"/>
+                        <MenuItem Text="Delete" IsDestructive="True"/>
+                    </ViewCell.ContextActions>
+                    <Grid Padding="10">
+                        <Frame CornerRadius="20" HasShadow="True">
+                            <StackLayout Orientation="Horizontal">
+                                <Image Source="{Binding Image}" WidthRequest="66"/>
+                                <StackLayout VerticalOptions="Center">
+                                    <Label VerticalOptions="Center" 
+                                            FontSize="Large"
+                                            Text="{Binding Name}"/>
+                                    <Label VerticalOptions="Center" 
+                                    FontSize="Large"
+                                    Text="{Binding Roaster}"/>
+                                </StackLayout>
 
-        <Button x:Name="ButtonCount" Grid.Row="2" Text="CLick me!"/>
-        <ProgressBar/>
-    </Grid>
+                                <Button Text="Favorite"
+                                        CommandParameter="{Binding .}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:CoffeeEquipmentViewModel}}, Path=FavoriteCommand}"/>
+                            </StackLayout>
+                        </Frame>
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+        <ListView.Header>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Coffee of the World"
+                       HorizontalOptions="Center"/>
+            </StackLayout>
+        </ListView.Header>
+
+        <ListView.Footer>
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Center">
+                <Button Text="Load More"/>
+            </StackLayout>
+        </ListView.Footer>
+
+    </ListView>
+
 </ContentPage>
