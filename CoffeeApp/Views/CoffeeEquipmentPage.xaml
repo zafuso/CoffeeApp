@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CoffeeApp.Views.CoffeeEquipmentPage"
+             BackgroundColor="White">
+
+        <Grid RowDefinitions="*,Auto,Auto,*">
+            <Label 
+                x:Name="LabelCount"
+                Grid.Row="1"
+                Text="Welcome to Xamarin.Forms!"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" 
+                FontSize="Large"/>
+
+        <Button x:Name="ButtonCount" Grid.Row="2" Text="CLick me!"/>
+        <ProgressBar/>
+    </Grid>
+</ContentPage>
